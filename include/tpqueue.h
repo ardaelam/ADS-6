@@ -1,12 +1,12 @@
 // Copyright 2022 NNTU-CS
-#ifndef TPQUEUE_H
-#define TPQUEUE_H
+#ifndef INCLUDE_TPQUEUE_H_
+#define INCLUDE_TPQUEUE_H_
 
 #include <stdexcept>
 
 template<typename T>
 class TPQueue {
- private:
+private:
     struct Node {
         T data;
         Node* next;
@@ -17,7 +17,7 @@ class TPQueue {
 
     Node* head;
 
- public:
+public:
     TPQueue() : head(nullptr) {}
 
     TPQueue(const TPQueue&) = delete;
