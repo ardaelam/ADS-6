@@ -6,63 +6,67 @@
 
 template<typename T>
 class TPQueue {
-private:
-    struct Node {
-        T data;
-        Node* next;
+ private:
+  struct Node {
+    T data;
+    Node* next;
 
-        explicit Node(const T& d, Node* n = nullptr)
-            : data(d), next(n) {}
-    };
+    explicit Node(const T& d, Node* n = nullptr) : data(d), next(n) {}
+  };
 
-    Node* head;
+  Node* head;
 
-public:
-    TPQueue() : head(nullptr) {}
+ public:
+  TPQueue() : head(nullptr) {}
 
-    TPQueue(const TPQueue&) = delete;
-    TPQueue& operator=(const TPQueue&) = delete;
+  ~TPQueue() {
+    while (head) {
+      Node* tmp = head;
+      head = head->next;
+      delete tmp;
+    }
+  }
 
-    ~TPQueue() {
-        while (head) {
-            Node* tmp = head;
-            head = head->next;
-            delete tmp;
-        }
+  TPQueue(const TPQueue&) = delete;
+  TPQueue& operator=(const TPQueue&) = delete;
+
+  void push(const T& value) {
+    Node* newNode = new Node(value);
+
+    if (head == nullptr || value.prior > head->data.prior) {
+      newNode->next = head;
+      head = newNode;
+      return;
     }
 
-    void push(const T& value) {
-        Node* newNode = new Node(value);
-
-        if (head == nullptr || value.prior > head->data.prior) {
-            newNode->next = head;
-            head = newNode;
-            return;
-        }
-
-        Node* current = head;
-        while (current->next != nullptr &&
-               current->next->data.prior >= value.prior) {
-            current = current->next;
-        }
-        newNode->next = current->next;
-        current->next = newNode;
+    Node* current = head;
+    while (current->next != nullptr &&
+           current->next->data.prior >= value.prior) {
+      current = current->next;
     }
+    newNode->next = current->next;
+    current->next = newNode;
+  }
 
-    T pop() {
-        if (head == nullptr) {
-            throw std::runtime_error("TPQueue::pop() on empty queue");
-        }
-        Node* tmp = head;
-        T result = head->data;
-        head = head->next;
-        delete tmp;
-        return result;
+  T pop() {
+    if (head == nullptr) {
+      throw std::runtime_error("TPQueue::pop() on empty queue");
     }
+    Node* tmp = head;
+    T result = head->data;
+    head = head->next;
+    delete tmp;
+    return result;
+  }
 
-    bool empty() const {
-        return head == nullptr;
-    }
+  bool empty() const {
+    return head == nullptr;
+  }
 };
 
-#endif
+struct SYM {
+  char ch;
+  int prior;
+};
+
+#endif  // INCLUDE_TPQUEUE_H_
